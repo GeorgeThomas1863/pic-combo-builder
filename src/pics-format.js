@@ -12,10 +12,8 @@ export const getComboArray = async (groupName, picArray) => {
   const picsToUse = await getPicsToUse(picArray, combineObj);
   if (!picsToUse) return null;
 
-  console.log("PICS TO USE");
-  console.log(picsToUse);
-
   const comboArray = await combinePicArray(groupName, picsToUse, combineObj.compositionCount);
+
   return comboArray;
 };
 

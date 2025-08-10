@@ -89,6 +89,9 @@ export const getCanvasPosition = (row, col) => {
     y: row * (picHeight + padding) + padding + titleHeight,
   };
 
+  // console.log("POSITION OBJ");
+  // console.log(positionObj);
+
   return positionObj;
 };
 
@@ -107,11 +110,11 @@ export const getImageDimensions = (image) => {
   if (aspectRatio > maxImageWidth / maxImageHeight) {
     // Image is wider than the slot
     imageHeight = maxImageWidth / aspectRatio;
-    offsetY = (maxImageHeight - height) / 2;
+    offsetY = (maxImageHeight - imageHeight) / 2;
   } else {
     // Image is taller than the slot
     imageWidth = maxImageHeight * aspectRatio;
-    offsetX = (maxImageWidth - width) / 2;
+    offsetX = (maxImageWidth - imageWidth) / 2;
   }
 
   const returnObj = {

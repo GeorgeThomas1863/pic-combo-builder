@@ -62,6 +62,9 @@ export const getGroupObj = async (picArray) => {
     groupObj[groupName] = await sortPicsByNumber(groupObj[groupName]);
   }
 
+  // console.log("GROUP OBJ");
+  // console.log(groupObj);
+
   console.log(`Found ${Object.keys(groupObj).length} groups of related images\n`);
 
   return groupObj;
@@ -70,6 +73,7 @@ export const getGroupObj = async (picArray) => {
 export const getGroupName = async (filename) => {
   const ext = path.extname(filename);
   const baseName = filename.slice(0, -ext.length);
+
   return baseName.substring(0, baseName.indexOf("_"));
 };
 
