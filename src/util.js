@@ -83,27 +83,3 @@ export const sortPicsByNumber = async (inputArray) => {
     return numA - numB;
   });
 };
-
-//seems way too complicated, fix
-export const getRandomPics = async (picArray, totalImages) => {
-  if (!state.active) return null;
-  if (!picArray || !picArray.length) return null;
-
-  if (totalImages >= picArray.length) return [...picArray];
-
-  const shuffled = [...picArray];
-
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    if (!state.active) return null;
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-
-  return shuffled.slice(0, count).sort((a, b) => {
-    if (!state.active) return null;
-    const numA = parseInt(a.split("_")[1]) || 0;
-    const numB = parseInt(b.split("_")[1]) || 0;
-    return numA - numB;
-  });
-};
-

@@ -1,5 +1,4 @@
 import CONFIG from "../config/config.js";
-import { getRandomPics } from "./util.js";
 
 export const getComboArray = async (groupName, picArray) => {
   if (!groupName || !picArray || !picArray.length) return null;
@@ -8,7 +7,13 @@ export const getComboArray = async (groupName, picArray) => {
   console.log(`Processing group: ${groupName} with ${picCount} images`);
 
   const combineObj = await getCombineObjType(picCount);
-  const picsToUse = combineObj.useRandom ? await getRandomPics(picArray, combineObj.totalImages) : picArray;
+  if (!combineObj) return null;
+
+  const picsToUse = await getPicsToUse(picArray, combineObj);
+  if (!picsToUse) return null;
+
+  console.log("PICS TO USE");
+  console.log(picsToUse);
 
   const comboArray = await combinePicArray(groupName, picsToUse, combineObj.compositionCount);
   return comboArray;
@@ -29,7 +34,7 @@ export const getCombineObjType = async (picCount) => {
     }
   }
 
-  console.log("Creating single composition");
+  // console.log("Creating single composition");
   const returnObj = {
     compositionCount: 1,
     totalImages: picCount,
@@ -60,4 +65,51 @@ export const combinePicArray = async (groupName, picArray, picCount) => {
   }
 
   return comboArray;
+};
+
+export const getPicsToUse = async (picArray, combineObj) => {
+  const { compositionCount, totalImages, useRandom } = combineObj;
+
+  if (compositionCount === 1) {
+    const singlePicArray = await getSingleComposition(picArray, totalImages);
+    return singlePicArray;
+  }
+
+  if (useRandom) {
+    const randomArray = await getRandomPics(picArray, totalImages);
+    return randomArray;
+  }
+
+  // const picsToUse = combineObj.useRandom ? await getRandomPics(picArray, combineObj.totalImages) : picArray;
+  return picArray;
+};
+
+export const getSingleComposition = async (picArray) => {
+  if (!picArray || !picArray.length) return null;
+
+  const singlePicArray = picArray.slice(-9);
+  return singlePicArray;
+};
+
+//seems way too complicated, UNTESTED
+export const getRandomPics = async (picArray, totalImages) => {
+  if (!state.active) return null;
+  if (!picArray || !picArray.length) return null;
+
+  if (totalImages >= picArray.length) return [...picArray];
+
+  const shuffled = [...picArray];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    if (!state.active) return null;
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, count).sort((a, b) => {
+    if (!state.active) return null;
+    const numA = parseInt(a.split("_")[1]) || 0;
+    const numB = parseInt(b.split("_")[1]) || 0;
+    return numA - numB;
+  });
 };
