@@ -1,8 +1,8 @@
-import CONFIG from "./config/config.js";
+import CONFIG from "../config/config.js";
 import path from "path";
-import { checkBothPathsExist, getPicArray, getGroupObj, saveImage } from "./src/util.js";
-import { getComboArray } from "./src/pics-format.js";
-import { runCanvas } from "./src/pics-canvas.js";
+import { checkBothPathsExist, getPicArray, getGroupObj, saveImage } from "./util.js";
+import { getComboArray } from "./pics-format.js";
+import { runCanvas } from "./pics-canvas.js";
 
 export const main = async () => {
   const { inputPath, outputPath } = CONFIG;
