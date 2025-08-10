@@ -20,6 +20,8 @@ export const getBackendDataRoute = async (req, res) => {
 
     state.active = false;
 
+    console.log("DONE COMBINING PICS");
+
     return res.json(data);
   } catch (error) {
     console.error(error);
