@@ -17,5 +17,4 @@ app.use(express.static("public"));
 //routes
 app.use(routes);
 
-// app.listen(1801);
 app.listen(displayPort);
