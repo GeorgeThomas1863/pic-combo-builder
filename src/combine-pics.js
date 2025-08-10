@@ -45,5 +45,3 @@ export const createAndSaveComposition = async (comboItem, inputPath, outputPath)
     console.error(`Error creating composition ${name}:`, e.message);
   }
 };
-
-main();
