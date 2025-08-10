@@ -14,8 +14,6 @@ export const getComboArray = async (groupName, picArray) => {
   return comboArray;
 };
 
-//!!!HERE
-
 export const getCombineObjType = async (picCount) => {
   const { typeArray } = CONFIG;
 

@@ -12,9 +12,7 @@ export const runCombinePics = async (inputPath, outputPath) => {
   console.log(`\nScanning directory: ${inputPath}`);
 
   // Validate directories exist
-  const testData = await checkBothPathsExist(inputPath, outputPath);
-  console.log("TEST DATA");
-  console.log(testData);
+  await checkBothPathsExist(inputPath, outputPath);
 
   // Get and group image files
   const picArray = await getPicArray(inputPath);
@@ -50,9 +48,7 @@ export const createAndSaveComposition = async (comboItem, inputPath, outputPath)
     const buffer = await runCanvas(comboPics, name, inputPath);
     const savePath = path.join(outputPath, `${name}.png`);
 
-    const saveData = await saveImage(buffer, savePath);
-    console.log("SAVE DATA");
-    console.log(saveData);
+    await saveImage(buffer, savePath);
   } catch (e) {
     console.error(`Error creating composition ${name}:`, e.message);
   }
