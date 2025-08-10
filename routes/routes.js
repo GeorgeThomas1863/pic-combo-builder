@@ -5,7 +5,7 @@ import { getBackendDataRoute } from "../controllers/data-controller.js";
 
 const router = express.Router();
 
-router.post("/get-backend-data-route", getBackendDataRoute);
+router.post("/get-backend-data", getBackendDataRoute);
 
 router.get("/", indexDisplay);
 

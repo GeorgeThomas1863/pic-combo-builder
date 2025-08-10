@@ -4,21 +4,21 @@ import { checkBothPathsExist, getPicArray, getGroupObj, saveImage } from "./util
 import { getComboArray } from "./pics-format.js";
 import { runCanvas } from "./pics-canvas.js";
 
-export const main = async () => {
-  const { inputPath, outputPath } = CONFIG;
+// export const main = async () => {
+//   const { inputPath, outputPath } = CONFIG;
 
-  try {
-    console.log("Starting image composition process...");
+//   try {
+//     console.log("Starting image composition process...");
 
-    const picData = await runCombinePics(inputPath, outputPath);
-    console.log(picData);
+//     const picData = await runCombinePics(inputPath, outputPath);
+//     console.log(picData);
 
-    console.log("\nImage compositions completed successfully!");
-  } catch (e) {
-    console.error("\nError creating compositions:", e.message);
-    process.exit(1);
-  }
-};
+//     console.log("\nImage compositions completed successfully!");
+//   } catch (e) {
+//     console.error("\nError creating compositions:", e.message);
+//     process.exit(1);
+//   }
+// };
 
 export const runCombinePics = async (inputPath, outputPath) => {
   console.log(`\nScanning directory: ${inputPath}`);
