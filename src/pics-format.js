@@ -1,7 +1,7 @@
 import CONFIG from "../config/config.js";
 import { getRandomPics } from "./util.js";
 
-export const defineCombinedFormat = async (groupName, picArray) => {
+export const getComboArray = async (groupName, picArray) => {
   if (!groupName || !picArray || !picArray.length) return null;
 
   const picCount = picArray.length;
@@ -10,7 +10,8 @@ export const defineCombinedFormat = async (groupName, picArray) => {
   const combineObj = await getCombineObjType(picCount);
   const picsToUse = combineObj.useRandom ? await getRandomPics(picArray, combineObj.totalImages) : picArray;
 
-  return await createCompositionsFromImages(groupName, picsToUse, combineObj.compositionCount);
+  const comboArray = await combinePicArray(groupName, picsToUse, combineObj.compositionCount);
+  return comboArray;
 };
 
 //!!!HERE
@@ -37,4 +38,28 @@ export const getCombineObjType = async (picCount) => {
     useRandom: false,
   };
   return returnObj;
+};
+
+export const combinePicArray = async (groupName, picArray, picCount) => {
+  if (!groupName || !picArray || !picArray.length) return null;
+  const { maxImages } = CONFIG.canvas;
+  const comboArray = [];
+  const picsPerComp = Math.ceil(picArray.length / picCount);
+
+  for (let i = 0; i < picCount; i++) {
+    const startIndex = i * picsPerComp;
+    const endIndex = Math.min(startIndex + maxImages, picArray.length);
+    const comboPics = picArray.slice(startIndex, endIndex);
+
+    if (comboPics.length === 0) break;
+
+    const suffix = picCount === 1 ? "_comp" : `_comp${i + 1}`;
+
+    comboArray.push({
+      name: `${groupName}${suffix}`,
+      comboPics: comboPics,
+    });
+  }
+
+  return comboArray;
 };

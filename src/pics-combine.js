@@ -3,8 +3,8 @@ import path from "path";
 import fs from "fs";
 import fsPromises from "fs/promises";
 import { checkBothPathsExist, getPicArray, getGroupObj, saveImage } from "./util.js";
-import { defineCombinedFormat } from "./pics-format.js";
-import { createComposition } from "./canvasRenderer.js";
+import { getComboArray } from "./pics-format.js";
+import { runCanvas } from "./pics-canvas.js";
 
 export const runCombinePics = async (inputPath, outputPath) => {
   console.log(`\nScanning directory: ${inputPath}`);
@@ -26,17 +26,20 @@ export const runCombinePics = async (inputPath, outputPath) => {
 };
 
 export const processImageGroup = async (groupName, picArray, inputPath, outputPath) => {
-  const compositions = await defineCombinedFormat(groupName, picArray);
+  const comboArray = await getComboArray(groupName, picArray);
 
-  for (const composition of compositions) {
-    await createAndSaveComposition(composition, inputDir, outputDir);
+  for (const comboItem of comboArray) {
+    await createAndSaveComposition(comboItem, inputPath, outputPath);
   }
 }
 
-async function createAndSaveComposition({ name, images }, inputDir, outputDir) {
+//async function createAndSaveComposition({ name, images }, inputDir, outputDir) {
+export const createAndSaveComposition = async (comboItem, inputPath, outputPath) => {
+  const { name, comboPics } = comboItem;
+
   try {
-    const buffer = await createComposition(images, name, inputDir);
-    const outputPath = path.join(outputDir, `${name}.png`);
+    const buffer = await runCanvas(comboPics, name, inputPath);
+    const outputPath = path.join(outputPath, `${name}.png`);
 
     saveImage(buffer, outputPath);
   } catch (error) {
