@@ -2,16 +2,29 @@ import d from "./define-things.js";
 import { sendToBack } from "./api-front.js";
 
 export const submitHandler = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const params = {
-        inputPath: d.inputPathElement.value,
-        outputPath: d.outputPathElement.value,
-        route: "/get-backend-data",
-    }
-    
-    const data = await sendToBack(params);
-    console.log(data);
-}
+  const params = {
+    inputPath: d.inputPathElement.value,
+    outputPath: d.outputPathElement.value,
+    route: "/get-backend-data",
+  };
+
+  const data = await sendToBack(params);
+  console.log(data);
+};
+
+export const stopHandler = async (e) => {
+  e.preventDefault();
+
+  const params = {
+    route: "/get-backend-data",
+    command: "stop",
+  };
+
+  const data = await sendToBack(params);
+  console.log(data);
+};
 
 d.submitButton.addEventListener("click", submitHandler);
+d.stopButton.addEventListener("click", stopHandler);
