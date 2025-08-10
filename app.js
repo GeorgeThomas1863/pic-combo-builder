@@ -1,3 +1,5 @@
+//ON PIC FORMAT, KEEP GOING
+
 import CONFIG from "./config.js";
 import { runCombinePics } from "./src/pics-combine.js";
 
