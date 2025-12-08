@@ -1,4 +1,5 @@
 import CONFIG from "../config/config.js";
+import state from "./state.js";
 
 export const getComboArray = async (groupName, picArray) => {
   if (!groupName || !picArray || !picArray.length) return null;
