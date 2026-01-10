@@ -1,7 +1,7 @@
 import CONFIG from "../config/config.js";
 import state from "./state.js";
 
-export const getComboArray = async (groupName, picArray) => {
+export const getComboArray = async (groupName, picArray, delimiter) => {
   if (!groupName || !picArray || !picArray.length) return null;
 
   const picCount = picArray.length;
@@ -10,7 +10,7 @@ export const getComboArray = async (groupName, picArray) => {
   const combineObj = await getCombineObjType(picCount);
   if (!combineObj) return null;
 
-  const picsToUse = await getPicsToUse(picArray, combineObj);
+  const picsToUse = await getPicsToUse(picArray, combineObj, delimiter);
   if (!picsToUse) return null;
 
   const comboArray = await combinePicArray(groupName, picsToUse, combineObj.compositionCount);
@@ -66,7 +66,7 @@ export const combinePicArray = async (groupName, picArray, picCount) => {
   return comboArray;
 };
 
-export const getPicsToUse = async (picArray, combineObj) => {
+export const getPicsToUse = async (picArray, combineObj, delimiter) => {
   const { compositionCount, totalImages, useRandom } = combineObj;
 
   if (compositionCount === 1) {
@@ -75,7 +75,7 @@ export const getPicsToUse = async (picArray, combineObj) => {
   }
 
   if (useRandom) {
-    const randomArray = await getRandomPics(picArray, totalImages);
+    const randomArray = await getRandomPics(picArray, totalImages, delimiter);
     return randomArray;
   }
 
@@ -91,7 +91,7 @@ export const getSingleComposition = async (picArray) => {
 };
 
 //seems way too complicated, UNTESTED
-export const getRandomPics = async (picArray, totalImages) => {
+export const getRandomPics = async (picArray, totalImages, delimiter) => {
   if (!state.active) return null;
   if (!picArray || !picArray.length) return null;
 
@@ -107,8 +107,8 @@ export const getRandomPics = async (picArray, totalImages) => {
 
   return shuffled.slice(0, totalImages).sort((a, b) => {
     if (!state.active) return null;
-    const numA = parseInt(a.split("_")[1]) || 0;
-    const numB = parseInt(b.split("_")[1]) || 0;
+    const numA = parseInt(a.substring(a.lastIndexOf(delimiter))) || 0;
+    const numB = parseInt(b.substring(b.lastIndexOf(delimiter))) || 0;
     return numA - numB;
   });
 };

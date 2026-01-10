@@ -59,7 +59,7 @@ export const getGroupObj = async (picArray, delimiter) => {
   // Sort images within each group
   for (const groupName of Object.keys(groupObj)) {
     if (!state.active) return null;
-    groupObj[groupName] = await sortPicsByNumber(groupObj[groupName]);
+    groupObj[groupName] = await sortPicsByNumber(groupObj[groupName], delimiter);
   }
 
   // console.log("GROUP OBJ");
@@ -71,24 +71,31 @@ export const getGroupObj = async (picArray, delimiter) => {
 };
 
 export const getGroupName = async (filename, delimiter) => {
-  const ext = path.extname(filename);
-  const baseName = filename.slice(0, -ext.length);
+  // const ext = path.extname(filename);
+  // const baseName = filename.slice(0, -ext.length);
+
 
   //MAKE SOMETHING YOU CAN DEFINE ON DISPLAY
   // const groupName = baseName.substring(0, baseName.lastIndexOf('-'));
-  const groupName = baseName.substring(0, baseName.lastIndexOf(delimiter));
+  // const groupName = baseName.substring(0, baseName.lastIndexOf(delimiter));
+  const groupName = filename.substring(0, filename.lastIndexOf(delimiter));
+
+  console.log("GROUP NAME");
+  console.log(groupName);
 
   // return baseName.substring(0, baseName.indexOf("_"));
-  return groupName
+  return groupName;
 };
 
-export const sortPicsByNumber = async (inputArray) => {
+export const sortPicsByNumber = async (inputArray, delimiter) => {
   if (!state.active) return null;
   if (!inputArray || !inputArray.length) return null;
 
   return inputArray.sort((a, b) => {
-    const numA = parseInt(a.split("_")[1]);
-    const numB = parseInt(b.split("_")[1]);
+    // const numA = parseInt(a.split("_")[1]);
+    // const numB = parseInt(b.split("_")[1]);
+    const numA = parseInt(a.substring(a.lastIndexOf(delimiter)));
+    const numB = parseInt(b.substring(b.lastIndexOf(delimiter)));
     return numA - numB;
   });
 };

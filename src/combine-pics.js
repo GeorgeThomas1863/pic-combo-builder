@@ -23,15 +23,15 @@ export const runCombinePics = async (inputPath, outputPath, delimiter) => {
     if (!state.active) return null;
     if (!picArray || !picArray.length) continue;
 
-    await processImageGroup(groupName, picArray, inputPath, outputPath);
+    await processImageGroup(groupName, picArray, inputPath, outputPath, delimiter);
     console.log(""); // Empty line for readability
   }
 };
 
-export const processImageGroup = async (groupName, picArray, inputPath, outputPath) => {
+export const processImageGroup = async (groupName, picArray, inputPath, outputPath, delimiter) => {
   if (!state.active) return null;
 
-  const comboArray = await getComboArray(groupName, picArray);
+  const comboArray = await getComboArray(groupName, picArray, delimiter);
   if (!comboArray || !comboArray.length) return null;
 
   for (const comboItem of comboArray) {
