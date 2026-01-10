@@ -7,6 +7,7 @@ export const submitHandler = async (e) => {
   const params = {
     inputPath: d.inputPathElement.value,
     outputPath: d.outputPathElement.value,
+    delimiter: d.delimiterElement.value,
     route: "/get-backend-data",
   };
 

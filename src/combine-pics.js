@@ -6,7 +6,7 @@ import { getComboArray } from "./pics-format.js";
 import { runCanvas } from "./pics-canvas.js";
 import state from "./state.js";
 
-export const runCombinePics = async (inputPath, outputPath) => {
+export const runCombinePics = async (inputPath, outputPath, delimiter) => {
   if (!state.active) return null;
 
   console.log(`\nScanning directory: ${inputPath}`);
@@ -16,7 +16,7 @@ export const runCombinePics = async (inputPath, outputPath) => {
 
   // Get and group image files
   const picArray = await getPicArray(inputPath);
-  const groupObj = await getGroupObj(picArray);
+  const groupObj = await getGroupObj(picArray, delimiter);
 
   // Process each group
   for (const [groupName, picArray] of Object.entries(groupObj)) {
@@ -32,6 +32,7 @@ export const processImageGroup = async (groupName, picArray, inputPath, outputPa
   if (!state.active) return null;
 
   const comboArray = await getComboArray(groupName, picArray);
+  if (!comboArray || !comboArray.length) return null;
 
   for (const comboItem of comboArray) {
     await createAndSaveComposition(comboItem, inputPath, outputPath);

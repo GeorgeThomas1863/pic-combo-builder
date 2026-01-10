@@ -4,7 +4,7 @@ import state from "../src/state.js";
 export const getBackendDataRoute = async (req, res) => {
   try {
     const inputParams = req.body;
-    const { inputPath, outputPath, command } = inputParams;
+    const { inputPath, outputPath, command, delimiter } = inputParams;
 
     if (command === "stop") {
       state.active = false;
@@ -16,7 +16,7 @@ export const getBackendDataRoute = async (req, res) => {
     console.log("INPUT PARAMS");
     console.log(inputParams);
 
-    const data = await runCombinePics(inputPath, outputPath);
+    const data = await runCombinePics(inputPath, outputPath, delimiter);
 
     state.active = false;
 

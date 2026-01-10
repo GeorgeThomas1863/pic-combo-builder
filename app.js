@@ -1,3 +1,5 @@
+//ADD PIC NAME DELIMITER AS AN OPTION TO DISPLAY
+
 import express from "express";
 
 import CONFIG from "./config/config.js";

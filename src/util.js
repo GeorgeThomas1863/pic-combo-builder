@@ -40,14 +40,14 @@ export const getPicArray = async (inputPath) => {
   return picArray;
 };
 
-export const getGroupObj = async (picArray) => {
+export const getGroupObj = async (picArray, delimiter) => {
   if (!state.active) return null;
   if (!picArray || !picArray.length) return null;
   const groupObj = {};
 
   for (const file of picArray) {
     if (!state.active) return null;
-    const groupName = await getGroupName(file);
+    const groupName = await getGroupName(file, delimiter);
 
     if (!groupObj[groupName]) {
       groupObj[groupName] = [];
@@ -70,11 +70,16 @@ export const getGroupObj = async (picArray) => {
   return groupObj;
 };
 
-export const getGroupName = async (filename) => {
+export const getGroupName = async (filename, delimiter) => {
   const ext = path.extname(filename);
   const baseName = filename.slice(0, -ext.length);
 
-  return baseName.substring(0, baseName.indexOf("_"));
+  //MAKE SOMETHING YOU CAN DEFINE ON DISPLAY
+  // const groupName = baseName.substring(0, baseName.lastIndexOf('-'));
+  const groupName = baseName.substring(0, baseName.lastIndexOf(delimiter));
+
+  // return baseName.substring(0, baseName.indexOf("_"));
+  return groupName
 };
 
 export const sortPicsByNumber = async (inputArray) => {
