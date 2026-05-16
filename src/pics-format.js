@@ -90,7 +90,8 @@ export const getPicsToUse = async (picArray, combineObj, delimiter) => {
 export const getSingleComposition = async (picArray) => {
   if (!picArray || !picArray.length) return null;
 
-  const singlePicArray = picArray.slice(-9);
+  const { maxImages } = CONFIG.canvas;
+  const singlePicArray = picArray.slice(-maxImages);
   return singlePicArray;
 };
 

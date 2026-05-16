@@ -1,39 +1,53 @@
-// canvasRenderer.js
 import { createCanvas, loadImage } from "canvas";
 import path from "path";
 import CONFIG from "../config/config.js";
 
 export const runCanvas = async (picArray, picName, inputPath) => {
   if (!picArray || !picArray.length) return null;
-  const { maxImages } = CONFIG.canvas;
+  const { width, padding, gridColumns, gridRows, titleHeight, maxImages } = CONFIG.canvas;
 
-  console.log(`Creating composition: ${picName}.png`);
+  const filenames = picArray.slice(0, Math.min(picArray.length, maxImages));
 
-  const canvas = createCanvasWithBackground();
+  // Pre-load all images to compute this composition's average aspect ratio
+  const images = [];
+  for (const filename of filenames) {
+    try {
+      images.push(await loadImage(path.join(inputPath, filename)));
+    } catch (e) {
+      console.error(`Error loading image ${filename}:`, e.message);
+    }
+  }
+
+  if (!images.length) return null;
+
+  const avgAspectRatio = images.reduce((sum, img) => sum + img.width / img.height, 0) / images.length;
+  const cellWidth = (width - padding) / gridColumns;
+  const cellHeight = Math.round(cellWidth / avgAspectRatio);
+  const canvasHeight = cellHeight * gridRows;
+
+  console.log(`Creating composition: ${picName}.png | avgAspectRatio: ${avgAspectRatio.toFixed(2)} | cellHeight: ${cellHeight}px | canvasHeight: ${canvasHeight}px`);
+
+  const canvas = createCanvasWithBackground(canvasHeight);
   const ctx = canvas.getContext("2d");
 
   drawTitle(ctx, picName);
 
-  const maxPicsCombo = Math.min(picArray.length, maxImages);
-
-  const comboPathArray = [];
-  for (let i = 0; i < maxPicsCombo; i++) {
-    const comboPath = await drawImageAtPosition(ctx, picArray[i], i, inputPath);
-    comboPathArray.push(comboPath);
+  for (let i = 0; i < images.length; i++) {
+    drawImageAtPosition(ctx, images[i], i, cellHeight);
   }
 
   return canvas.toBuffer("image/png");
 };
 
-export const createCanvasWithBackground = () => {
-  const { width, height, titleHeight } = CONFIG.canvas;
+export const createCanvasWithBackground = (canvasHeight) => {
+  const { width, titleHeight } = CONFIG.canvas;
+  const totalHeight = canvasHeight + titleHeight;
 
-  const canvas = createCanvas(width, height + titleHeight);
+  const canvas = createCanvas(width, totalHeight);
   const ctx = canvas.getContext("2d");
 
-  // Fill background with white
   ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, width, height + titleHeight);
+  ctx.fillRect(0, 0, width, totalHeight);
 
   return canvas;
 };
@@ -47,59 +61,40 @@ export const drawTitle = (ctx, picName) => {
   ctx.fillText(`${picName}.png`, width / 2, 20);
 };
 
-export const drawImageAtPosition = async (ctx, picName, position, inputPath) => {
+export const drawImageAtPosition = (ctx, image, position, cellHeight) => {
   const { row, col } = getGridPosition(position);
 
-  console.log(`Processing image ${position + 1}: ${picName}`);
+  const { x, y } = getCanvasPosition(row, col, cellHeight);
+  const dimensionObj = getImageDimensions(image, cellHeight);
 
-  try {
-    const imagePath = path.join(inputPath, picName);
-    const image = await loadImage(imagePath);
-
-    const { x, y } = getCanvasPosition(row, col);
-    const dimensionObj = getImageDimensions(image);
-
-    ctx.drawImage(image, x + dimensionObj.offsetX, y + dimensionObj.offsetY, dimensionObj.imageWidth, dimensionObj.imageHeight);
-
-    return imagePath;
-  } catch (e) {
-    console.error(`Error loading image ${picName}:`, e.message);
-  }
+  ctx.drawImage(image, x + dimensionObj.offsetX, y + dimensionObj.offsetY, dimensionObj.imageWidth, dimensionObj.imageHeight);
 };
 
 export const getGridPosition = (position) => {
   const { gridColumns } = CONFIG.canvas;
 
-  const positionObj = {
+  return {
     row: Math.floor(position / gridColumns),
     col: position % gridColumns,
   };
-
-  return positionObj;
 };
 
-export const getCanvasPosition = (row, col) => {
-  const { width, height, padding, gridColumns, titleHeight } = CONFIG.canvas;
+export const getCanvasPosition = (row, col, cellHeight) => {
+  const { width, padding, gridColumns, titleHeight } = CONFIG.canvas;
 
-  const picWidth = (width - padding) / gridColumns;
-  const picHeight = (height - padding) / gridColumns;
+  const cellWidth = (width - padding) / gridColumns;
 
-  const positionObj = {
-    x: col * (picWidth + padding) + padding,
-    y: row * (picHeight + padding) + padding + titleHeight,
+  return {
+    x: col * (cellWidth + padding) + padding,
+    y: row * (cellHeight + padding) + padding + titleHeight,
   };
-
-  // console.log("POSITION OBJ");
-  // console.log(positionObj);
-
-  return positionObj;
 };
 
-export const getImageDimensions = (image) => {
-  const { width, height, padding, gridColumns } = CONFIG.canvas;
+export const getImageDimensions = (image, cellHeight) => {
+  const { width, padding, gridColumns } = CONFIG.canvas;
 
   const maxImageWidth = (width - padding) / gridColumns;
-  const maxImageHeight = (height - padding) / gridColumns;
+  const maxImageHeight = cellHeight;
 
   const aspectRatio = image.width / image.height;
   let imageWidth = maxImageWidth;
@@ -108,21 +103,12 @@ export const getImageDimensions = (image) => {
   let offsetY = 0;
 
   if (aspectRatio > maxImageWidth / maxImageHeight) {
-    // Image is wider than the slot
     imageHeight = maxImageWidth / aspectRatio;
     offsetY = (maxImageHeight - imageHeight) / 2;
   } else {
-    // Image is taller than the slot
     imageWidth = maxImageHeight * aspectRatio;
     offsetX = (maxImageWidth - imageWidth) / 2;
   }
 
-  const returnObj = {
-    imageWidth: imageWidth,
-    imageHeight: imageHeight,
-    offsetX: offsetX,
-    offsetY: offsetY,
-  };
-
-  return returnObj;
+  return { imageWidth, imageHeight, offsetX, offsetY };
 };
