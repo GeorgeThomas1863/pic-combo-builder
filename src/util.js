@@ -94,8 +94,8 @@ export const sortPicsByNumber = async (inputArray, delimiter) => {
   return inputArray.sort((a, b) => {
     // const numA = parseInt(a.split("_")[1]);
     // const numB = parseInt(b.split("_")[1]);
-    const numA = parseInt(a.substring(a.lastIndexOf(delimiter)));
-    const numB = parseInt(b.substring(b.lastIndexOf(delimiter)));
+    const numA = parseInt(a.substring(a.lastIndexOf(delimiter) + 1));
+    const numB = parseInt(b.substring(b.lastIndexOf(delimiter) + 1));
     return numA - numB;
   });
 };

@@ -107,8 +107,8 @@ export const getRandomPics = async (picArray, totalImages, delimiter) => {
 
   return shuffled.slice(0, totalImages).sort((a, b) => {
     if (!state.active) return null;
-    const numA = parseInt(a.substring(a.lastIndexOf(delimiter))) || 0;
-    const numB = parseInt(b.substring(b.lastIndexOf(delimiter))) || 0;
+    const numA = parseInt(a.substring(a.lastIndexOf(delimiter) + 1)) || 0;
+    const numB = parseInt(b.substring(b.lastIndexOf(delimiter) + 1)) || 0;
     return numA - numB;
   });
 };
