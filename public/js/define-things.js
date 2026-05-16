@@ -4,6 +4,7 @@ const d = {
   delimiterElement: document.getElementById("delimiter-element"),
   submitButton: document.getElementById("submit-button"),
   stopButton: document.getElementById("stop-button"),
+  statusElement: document.getElementById("status-element"),
 };
 
 export default d;

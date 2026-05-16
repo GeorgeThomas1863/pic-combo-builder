@@ -1,7 +1,8 @@
+import fs from "fs";
 import fsPromises from "fs/promises";
 import path from "path";
 
-import { checkBothPathsExist, getPicArray, getGroupObj } from "./util.js";
+import { getPicArray, getGroupObj } from "./util.js";
 import { getComboArray } from "./pics-format.js";
 import { runCanvas } from "./pics-canvas.js";
 import state from "./state.js";
@@ -11,12 +12,14 @@ export const runCombinePics = async (inputPath, outputPath, delimiter) => {
 
   console.log(`\nScanning directory: ${inputPath}`);
 
-  // Validate directories exist
-  await checkBothPathsExist(inputPath, outputPath);
+  if (!fs.existsSync(inputPath)) throw new Error(`Input directory does not exist: ${inputPath}`);
+  await fsPromises.mkdir(outputPath, { recursive: true });
 
   // Get and group image files
   const picArray = await getPicArray(inputPath);
   const groupObj = await getGroupObj(picArray, delimiter);
+
+  if (!groupObj) throw new Error("No image groups found in input directory.");
 
   // Process each group
   for (const [groupName, picArray] of Object.entries(groupObj)) {

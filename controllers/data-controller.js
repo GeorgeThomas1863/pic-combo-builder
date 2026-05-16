@@ -16,13 +16,13 @@ export const getBackendDataRoute = async (req, res) => {
     console.log("INPUT PARAMS");
     console.log(inputParams);
 
-    const data = await runCombinePics(inputPath, outputPath, delimiter);
+    await runCombinePics(inputPath, outputPath, delimiter);
 
     state.active = false;
 
     console.log("DONE COMBINING PICS");
 
-    return res.json(data);
+    return res.json({ message: "Done! Compositions saved." });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Failed to get backend data" });

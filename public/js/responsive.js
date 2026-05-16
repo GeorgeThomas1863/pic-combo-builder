@@ -4,6 +4,8 @@ import { sendToBack } from "./api-front.js";
 export const submitHandler = async (e) => {
   e.preventDefault();
 
+  d.statusElement.textContent = "Processing...";
+
   const params = {
     inputPath: d.inputPathElement.value,
     outputPath: d.outputPathElement.value,
@@ -12,7 +14,7 @@ export const submitHandler = async (e) => {
   };
 
   const data = await sendToBack(params);
-  console.log(data);
+  d.statusElement.textContent = data?.error || data?.message || "Unknown response";
 };
 
 export const stopHandler = async (e) => {

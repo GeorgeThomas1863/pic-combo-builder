@@ -43,6 +43,7 @@ export const getPicArray = async (inputPath) => {
 export const getGroupObj = async (picArray, delimiter = "_") => {
   if (!state.active) return null;
   if (!picArray || !picArray.length) return null;
+  delimiter = delimiter || "_";
   const groupObj = {};
 
   for (const file of picArray) {
