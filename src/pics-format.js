@@ -48,10 +48,14 @@ export const combinePicArray = async (groupName, picArray, picCount) => {
   const comboArray = [];
   const picsPerComp = Math.ceil(picArray.length / picCount);
 
+  console.log(`[combinePicArray] group: "${groupName}" | totalPics: ${picArray.length} | compositionCount: ${picCount} | picsPerComp: ${picsPerComp}`);
+
   for (let i = 0; i < picCount; i++) {
     const startIndex = i * picsPerComp;
     const endIndex = Math.min(startIndex + maxImages, picArray.length);
     const comboPics = picArray.slice(startIndex, endIndex);
+
+    console.log(`[combinePicArray] comp ${i + 1}: startIndex=${startIndex} endIndex=${endIndex} count=${comboPics.length}`);
 
     if (comboPics.length === 0) break;
 

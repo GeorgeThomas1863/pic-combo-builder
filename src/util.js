@@ -43,7 +43,9 @@ export const getPicArray = async (inputPath) => {
 export const getGroupObj = async (picArray, delimiter = "_") => {
   if (!state.active) return null;
   if (!picArray || !picArray.length) return null;
+  console.log(`[getGroupObj] delimiter received: "${delimiter}" (type: ${typeof delimiter})`);
   delimiter = delimiter || "_";
+  console.log(`[getGroupObj] delimiter after normalization: "${delimiter}"`);
   const groupObj = {};
 
   for (const file of picArray) {
@@ -72,17 +74,9 @@ export const getGroupObj = async (picArray, delimiter = "_") => {
 };
 
 export const getGroupName = async (filename, delimiter = "_") => {
-  // const ext = path.extname(filename);
-  // const baseName = filename.slice(0, -ext.length);
-
-
-  //MAKE SOMETHING YOU CAN DEFINE ON DISPLAY
-  // const groupName = baseName.substring(0, baseName.lastIndexOf('-'));
-  // const groupName = baseName.substring(0, baseName.lastIndexOf(delimiter));
-  const groupName = filename.substring(0, filename.lastIndexOf(delimiter));
-
-  console.log("GROUP NAME");
-  console.log(groupName);
+  const lastIdx = filename.lastIndexOf(delimiter);
+  const groupName = filename.substring(0, lastIdx);
+  console.log(`[getGroupName] file: "${filename}" | delimiter: "${delimiter}" | lastIndexOf: ${lastIdx} | groupName: "${groupName}"`);
 
   // return baseName.substring(0, baseName.indexOf("_"));
   return groupName;

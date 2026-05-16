@@ -47,14 +47,16 @@ export const createAndSaveComposition = async (comboItem, inputPath, outputPath)
   if (!state.active) return null;
 
   const { name, comboPics } = comboItem;
+  console.log(`[createAndSaveComposition] starting "${name}" | pics: ${comboPics.length} | inputPath: "${inputPath}" | outputPath: "${outputPath}"`);
 
   try {
     const buffer = await runCanvas(comboPics, name, inputPath);
+    console.log(`[createAndSaveComposition] canvas buffer received: ${buffer ? buffer.length + " bytes" : "NULL"}`);
     const savePath = path.join(outputPath, `${name}.png`);
-
     await saveImage(buffer, savePath);
   } catch (e) {
-    console.error(`Error creating composition ${name}:`, e.message);
+    console.error(`[createAndSaveComposition] ERROR for "${name}":`, e.message);
+    console.error(e.stack);
   }
 };
 

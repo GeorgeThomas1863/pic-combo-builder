@@ -13,8 +13,7 @@ export const getBackendDataRoute = async (req, res) => {
 
     state.active = true;
 
-    console.log("INPUT PARAMS");
-    console.log(inputParams);
+    console.log(`[controller] inputPath: "${inputPath}" | outputPath: "${outputPath}" | delimiter: "${delimiter}" (type: ${typeof delimiter})`);
 
     await runCombinePics(inputPath, outputPath, delimiter);
 
